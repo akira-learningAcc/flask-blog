@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Mac
+.DS_Store
+
+# Environment variables
+.env
+
+# Local database files
+*.sqlite3
+instance/
+
+# VSCode (optional)
+.vscode/
+
+# Tool files
+.python-version
+
