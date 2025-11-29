@@ -2,8 +2,11 @@
 
 {% block content %}
 <h1>管理者ページ</h1>
+<a href="/create" role="button">投稿</a>
 {% for post in posts %} 
 <article>
+                    <a href="/{{post.id}}/update" role="button">更新</a>
+                    <a href="/{{post.id}}/delete" role="button">削除</a>
                     <h2>{{ post.title }}</h2>
                     <p>{{ post.created_at }}</p>
                     <p>{{ post.body }}</p>
