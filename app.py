@@ -33,27 +33,8 @@ class Post(db.Model):
 
 @app.route("/admin")
 def admin():
-       posts = [
-              {
-                     'title': '記事のタイトル1',
-                     'body': '記事の内容がここに入ります。',
-                     'created_at': '2024-06-01 12:00'
-              },{
-                     'title': '記事のタイトル2',
-                     'body': '記事の内容がここに入ります。',
-                     'created_at': '2024-06-01 12:00'
-              },{
-                     'title': '記事のタイトル3',
-                     'body': '記事の内容がここに入ります。',
-                     'created_at': '2024-06-01 12:00'
-              },{
-                     'title': '記事のタイトル4',
-                     'body': '記事の内容がここに入ります。',
-                     'created_at': '2024-06-01 12:00'
-              }
-       ]
-       post = posts[0]
-       return render_template("admin.html",post=post)
+       posts = Post.query.all()
+       return render_template("admin.html",posts=posts)
 
 @app.route("/create", methods=["GET","POST"])
 def create():
