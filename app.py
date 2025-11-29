@@ -38,18 +38,27 @@ def admin():
 
 @app.route("/create", methods=["GET","POST"])
 def create():
-       #リクエストのメソッドの判別
-       if request.method == "POST":
-              #リクエストできた情報の取得
-              title = request.form.get("title")
-              body = request.form.get("body")
-              #情報の保存
-              post = Post(title=title, body=body)
-              db.session.add(post)
-              db.session.commit()
-              return redirect("/admin")
-       elif request.method == "GET":
-              return render_template("create.html",method="GET")
+              #リクエストのメソッドの判別
+              if request.method == "POST":
+                     #リクエストできた情報の取得
+                     title = request.form.get("title")
+                     body = request.form.get("body")
+                     #情報の保存
+                     post = Post(title=title, body=body)
+                     db.session.add(post)
+                     db.session.commit()
+                     return redirect("/admin")
+              elif request.method == "GET":
+                     return render_template("create.html",method="GET")
        
-       
+@app.route("/<int:post_id>/update", methods=["GET","POST"])
+def update(post_id):
+              post = Post.query.get(post_id)
+              if request.method == "POST":
+                     post.title = request.form.get("title")
+                     post. body = request.form.get("body")
+                     db.session.commit()
+                     return redirect("/admin")
+              elif request.method == "GET":
+                     return render_template("update.html",post=post)
        
