@@ -2,8 +2,11 @@ from dotenv import load_dotenv
 load_dotenv()
 from flask import Flask, render_template, request,redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import pytz
 from datetime import datetime
+
+import os
 
 app = Flask(__name__)
 
@@ -23,6 +26,7 @@ SQLALCHEMY_DATABASE_URI = (
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db.init_app(app)
 
+migrate = Migrate(app, db)
 
 class Post(db.Model):
        id = db.Column(db.Integer, primary_key=True)
@@ -30,7 +34,7 @@ class Post(db.Model):
        body = db.Column(db.Text, nullable=False)
        tokyo_timezone = pytz.timezone('Asia/Tokyo')
        created_at = db.Column(db.DateTime,nullable=False,default=datetime.now(tokyo_timezone))
-
+       img_name = db.Column(db.String(255),nullable=True)
 @app.route("/admin")
 def admin():
        posts = Post.query.all()
@@ -43,8 +47,15 @@ def create():
                      #リクエストできた情報の取得
                      title = request.form.get("title")
                      body = request.form.get("body")
-                     #情報の保存
-                     post = Post(title=title, body=body)
+                     #1.画像情報の取得
+                     file = request.files['img']
+                     #2.画像ファイル名の取得
+                     filename = file.filename
+                     #3.データベースにファイル名を保存
+                     post = Post(title=title, body=body,img_name=filename)
+                     #4.画像の保存
+                     save_path = os.path.join(app.static_folder,'img',filename)
+                     file.save(save_path)
                      db.session.add(post)
                      db.session.commit()
                      return redirect("/admin")
